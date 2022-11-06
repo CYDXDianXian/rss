@@ -292,10 +292,11 @@ async def group_process():
                         msg = format_brief_msg(news)
                     else:
                         msg = format_msg(news)
-                    try:
-                        await bot.send_group_msg(group_id=gid, message=msg)
-                    except:
-                        sv.logger.info(f'群 {gid} 推送失败')
+                    for sid in hoshino.get_self_ids():
+                        try:
+                            await bot.send_group_msg(self_id = sid, group_id = gid, message = msg)
+                        except Exception as e:
+                            sv.logger.info(f'bot账号{sid}不在群{gid}中，将忽略该消息')
                 await asyncio.sleep(1)
 
 async def rss_add(group_id, rss_url):
