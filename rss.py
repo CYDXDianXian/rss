@@ -361,20 +361,21 @@ async def rss_cmd(bot, ev):
     group_id = ev.group_id
     args = ev.message.extract_plain_text().split()
     is_admin = hoshino.priv.check_priv(ev, hoshino.priv.ADMIN)
+    is_su = hoshino.priv.check_priv(ev, hoshino.priv.SUPERUSER)
 
     if len(args) == 0:
         msg = HELP_MSG
     elif args[0] == 'help':
         msg = HELP_MSG
     elif args[0] == 'add':
-        if not is_admin:
+        if not is_su:
             msg = '权限不足'
         elif len(args) >= 2:
             msg = await rss_add(group_id, args[1])
         else:
             msg = '需要附带rss地址'
     elif args[0] == 'addb' or  args[0] == 'add-bilibili':
-        if not is_admin:
+        if not is_su:
             msg = '权限不足'
         elif len(args) >= 2 and args[1].isdigit():
             rss_url = data['rsshub'] + '/bilibili/user/dynamic/' + str(args[1])
@@ -382,7 +383,7 @@ async def rss_cmd(bot, ev):
         else:
             msg = '需要附带up主id'
     elif args[0] == 'addr' or  args[0] == 'add-route':
-        if not is_admin:
+        if not is_su:
             msg = '权限不足'
         elif len(args) >= 2:
             rss_url = data['rsshub'] + args[1]
@@ -391,7 +392,7 @@ async def rss_cmd(bot, ev):
             msg = '需要提供route参数'
         pass
     elif args[0] == 'remove' or args[0] == 'rm':
-        if not is_admin:
+        if not is_su:
             msg = '权限不足'
         elif len(args) >= 2 and args[1].isdigit():
             msg = rss_remove(group_id, int(args[1]))
@@ -400,7 +401,7 @@ async def rss_cmd(bot, ev):
     elif args[0] == 'list' or args[0] == 'ls':
         msg = rss_get_list(group_id)
     elif args[0] == 'mode':
-        if not is_admin:
+        if not is_su:
             msg = '权限不足'
         elif len(args) >= 2 and args[1].isdigit():
             msg = rss_set_mode(group_id, args[1])
